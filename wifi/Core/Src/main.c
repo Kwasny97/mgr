@@ -85,6 +85,7 @@ RTC_DateTypeDef sDate;
 
 
 
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -316,15 +317,52 @@ void SystemClock_Config(void)
 void Log_Time(void){
 
 	int i=644;
-
+	//char seconds[2]={'0','0'};
+	char seconds[3]={0,0,0};
+	char minutes[3]={0,0,0};
+	//seconds[0]=48;
+	//seconds[1]=48;
+	//seconds[2]=48;
 	  HAL_RTC_GetTime(&hrtc,&sTime, RTC_FORMAT_BIN);
 	  HAL_RTC_GetDate(&hrtc,&sDate, RTC_FORMAT_BIN);
-	  presence[299]=(char*)sTime.Seconds;
+	  //presence[299]=(int)(sTime.Seconds);
+	  //itoa(sTime.Seconds,presence+298,10);
+	  itoa(sTime.Seconds,seconds,10);
+	  itoa(sTime.Minutes,minutes,10);
+
+
+	  if (seconds[1]=='\0'){
+		  seconds[1]='0';
+	  }
+
+	  if(minutes[1]=='\0'){
+		 minutes[1]='0';
+	 }
+
+	  if(sTime.Seconds < 10){
+	  presence[298]=seconds[1];
+	  presence[299]=seconds[0];
+	  }
+	  else{
+		  presence[298]=seconds[0];
+		  presence[299]=seconds[1];
+	  }
+
+	  if (sTime.Minutes < 10){
+	  presence[295]=minutes[1];
+	  presence[296]=minutes[0];
+	  }
+	  else{
+		  presence[295]=minutes[0];
+		  presence[296]=minutes[1];
+	  }
+
 
 	  while(i>311){
 		  presence[i]=presence[i-37];
 		  i--;
 	  }
+
 	 //; HAL_Delay(500);
 
 

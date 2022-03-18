@@ -276,16 +276,16 @@ void web_def (void)
 	  //strcat(presence, "<p><b>  <input type=\"range\" id=\"volume\" name=\"volume\"min=\"0\" max=\"9\"><label for=\"volume\">Volume</label>\r\n");
 	  strcat(presence, "<p><b>Obecnosc w pomieszczeniu  </b> </p>\r\n"); //°C
 	  strcat(presence, "<p><b>Data:  Godzina:  </b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:50</b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:40</b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:30</b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:20</b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:10</b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:00</b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:50</b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:40</b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:30</b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:20</b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:50 </b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:40 </b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:30 </b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:20 </b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:10 </b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:00 </b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:50 </b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:40 </b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:30 </b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:20 </b> </p>\r\n");
 	  strcat(presence, "<p><b><b><input type=\"submit\" name=\"pw\" value=\"POWROT\"/>\r\n");
 
 	  // tu poniżej będą dopisywane logi

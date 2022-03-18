@@ -61,8 +61,8 @@ all: main-build
 main-build: wifi.elf secondary-outputs
 
 # Tool invocations
-wifi.elf: $(OBJS) $(USER_OBJS) C:\STM32Projects\wifi\STM32F411CEUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "wifi.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\STM32Projects\wifi\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="wifi.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+wifi.elf: $(OBJS) $(USER_OBJS) C:\STM32Projects\git_repository\wifi\STM32F411CEUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "wifi.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\STM32Projects\git_repository\wifi\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="wifi.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
