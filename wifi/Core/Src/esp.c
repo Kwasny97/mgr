@@ -121,6 +121,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * uart) {
 	// Ponowne uruchomienie przerwania
 	HAL_UART_Receive_IT(uart, &esp_recv_char, 1);
 }
+
 // Funkcja przesyłająca do modułu ESP8266 polecenia konfigurujące
 uint8_t esp_setup(UART_HandleTypeDef * uart, char * wifi_name, char * wifi_pass) {
 esp_char_counter = 0;
@@ -133,9 +134,8 @@ if (!esp_send_cmd(uart, "AT+CWMODE=1")) return 0;
 if (!esp_send_cmd(uart, conn_str)) return 0;
 if (!esp_send_cmd(uart, "AT+CIPMUX=1")) return 0;
 if (!esp_send_cmd(uart, "AT+CIPSERVER=1,80")) return 0;
-//if (!esp_send_cmd(uart, "AT+CWJAP")) return 0; // dołożone
-if (!esp_send_cmd(uart, "AT+CIPSTA?")) return 0; // dołożone
-HAL_Delay(1500); // dołożone
+if (!esp_send_cmd(uart, "AT+CIPSTA?")) return 0;
+//HAL_Delay(1500); // w razie w odkomentuj
 esp_start_int_recv(uart);
 return 1;
 }

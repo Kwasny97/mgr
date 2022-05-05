@@ -13,54 +13,49 @@
 
 
 
-void select_web (UART_HandleTypeDef *huart, int *web_state)
-{
-	// Odczytujemy pierwsze 6 znaków odebranego żądania HTTP
+void select_web(UART_HandleTypeDef *huart, int *web_state) {
+	/* Parse first 6 chars of HTTP request */
 	char request_begining[7];
 
 	for (uint8_t i = 0; i < 6; i++)
-		request_begining[i] = esp_recv_buffer[i];
+		 request_begining[i] = esp_recv_buffer[i];
+
 	request_begining[6] = '\0';
-	// Jeśli przesłane zostały parametry - początek żądania:
-	// "GET /?red=XXX&green=XXX&blue=XXX HTTP/1.1"
+
 	if (strcmp(request_begining, "GET /?") == 0)
 	{
-		set_color(0,0,80);
-		//HAL_Delay(500);
-
+		set_color(0, 0, 80);
 		switch (*web_state)
 		{
 		case NOT_LOGGED:
-			login(&huart1,web_state);
+			login(&huart1, web_state);
 			break;
 		case LOGGED:
-			handle_request_strona(&huart1,web_state);
+			handle_request_strona(&huart1, web_state);
 			break;
 		case LIGHTS:
-			lights_page(&huart1,web_state);
+			lights_page(&huart1, web_state);
 			break;
 		case HEIZUNG:
-			heizung_seite(&huart1,web_state);
-		break;
+			heizung_seite(&huart1, web_state);
+			break;
 		case PRESENCE:
-			presence_page(&huart1,web_state);
-		break;
+			presence_page(&huart1, web_state);
+			break;
 		default:
 			break;
 		}
 
-////// Sprawdzenie loginu
-	}else if (strcmp(request_begining, "GET / ") == 0)
+    /* Sprawdzenie loginu */
+	}
+	else if (strcmp(request_begining, "GET / ") == 0)
 	{
-		set_color(200,0,0);
+		set_color(200, 0, 0);
 		esp_send_data_and_close(huart, esp_recv_mux, frontpage);
 	}
-	else
-		esp_send_data_and_close(huart, esp_recv_mux, error);
-///////////////////////////////////////////////////////////////////////////////
-	esp_restart_int_recv(huart);
+	else esp_send_data_and_close(huart, esp_recv_mux, error);
 
-	//return web_state;
+	esp_restart_int_recv(huart);
 
 }
 
@@ -276,16 +271,16 @@ void web_def (void)
 	  //strcat(presence, "<p><b>  <input type=\"range\" id=\"volume\" name=\"volume\"min=\"0\" max=\"9\"><label for=\"volume\">Volume</label>\r\n");
 	  strcat(presence, "<p><b>Obecnosc w pomieszczeniu  </b> </p>\r\n"); //°C
 	  strcat(presence, "<p><b>Data:  Godzina:  </b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:50 </b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:40 </b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:30 </b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:20 </b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:10 </b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:00 </b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:50 </b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:40 </b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:30 </b> </p>\r\n");
-	  strcat(presence, "<p><b> --:--:-- , --:--:20 </b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:50</b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:40</b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:30</b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:20</b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:10</b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:00</b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:50</b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:40</b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:30</b> </p>\r\n");
+	  strcat(presence, "<p><b> --:--:-- , --:--:20</b> </p>\r\n");
 	  strcat(presence, "<p><b><b><input type=\"submit\" name=\"pw\" value=\"POWROT\"/>\r\n");
 
 	  // tu poniżej będą dopisywane logi

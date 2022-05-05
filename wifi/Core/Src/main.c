@@ -70,6 +70,8 @@ char esp_IP[1000]; //30
 char IP_Request[20] = {"AT+CIPSTA?"};//AT+CIPSTA?
 int ph = 'k'+1;
 int interrupt_flag=0;
+uint8_t flag=0;
+uint8_t second_prev=0;
 //int log_num=0;
 //log_line log_tab[10]; // tablica logów
 //char logg[40]="<p><b> --:--:-- , --:--:--</b> </p>\r\n";
@@ -134,7 +136,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	int web_state=0; // stan jako niezalogowany
+	int web_state = 0;
 
 	//uint32_t sec;
 
@@ -196,14 +198,14 @@ int main(void)
   //  //set time
     if(HAL_RTCEx_BKUPRead(&hrtc,RTC_BKP_DR1) != 0x32F2) // próba zrobienia, żeby się nie resetowało
     {
-    sTime.Hours = 0;
-    sTime.Minutes = 0;
-    sTime.Seconds = 0;
+    sTime.Hours = 13;
+    sTime.Minutes = 23;
+    sTime.Seconds = 30;
     HAL_RTC_SetTime(&hrtc,&sTime, RTC_FORMAT_BIN);
     }
 
-    sDate.Date = 22;
-    sDate.Month = RTC_MONTH_NOVEMBER;
+    sDate.Date = 18;
+    sDate.Month = RTC_MONTH_MARCH;
     sDate.WeekDay = RTC_WEEKDAY_MONDAY;
     sDate.Year = 22;
     HAL_RTC_SetDate(&hrtc,&sDate, RTC_FORMAT_BIN);
@@ -232,16 +234,9 @@ int main(void)
 
 	  if (esp_recv_flag == 1)
 	  {
-
-		select_web(&huart1, &web_state); // &
-
-
+		select_web(&huart1, &web_state);
 	  }
 
-
-	  if (interrupt_flag == 1){
-	  Log_Time();
-	  }
 
 	  ds18b20_start_measure(ds1);
 	  temperature1 = ds18b20_get_temp(ds1);
@@ -317,55 +312,114 @@ void SystemClock_Config(void)
 void Log_Time(void){
 
 	int i=644;
-	//char seconds[2]={'0','0'};
 	char seconds[3]={0,0,0};
 	char minutes[3]={0,0,0};
-	//seconds[0]=48;
-	//seconds[1]=48;
-	//seconds[2]=48;
+	char hours[3]={0,0,0};
+	char date[3]={0,0,0};
+	char month[3]={0,0,0};
+	char year[3]={0,0,0};
+
 	  HAL_RTC_GetTime(&hrtc,&sTime, RTC_FORMAT_BIN);
 	  HAL_RTC_GetDate(&hrtc,&sDate, RTC_FORMAT_BIN);
-	  //presence[299]=(int)(sTime.Seconds);
-	  //itoa(sTime.Seconds,presence+298,10);
-	  itoa(sTime.Seconds,seconds,10);
-	  itoa(sTime.Minutes,minutes,10);
+
+	  if(second_prev != sTime.Seconds){
+
+		  itoa(sTime.Seconds,seconds,10);
+		  itoa(sTime.Minutes,minutes,10);
+		  itoa(sTime.Hours,hours,10);
+		  itoa(sDate.Date,date,10);
+		  itoa(sDate.Month,month,10);
+		  itoa(sDate.Year,year,10);
+
+		  if (seconds[1]=='\0'){
+			  seconds[1]='0';
+			 }
+		  if(minutes[1]=='\0'){
+			  minutes[1]='0';
+			 }
+		  if(hours[1]=='\0'){
+			  hours[1]='0';
+			 }
+		  if(date[1]=='\0'){
+			  date[1]='0';
+			 }
+		  if(month[1]=='\0'){
+			  month[1]='0';
+			 }
+		  if(year[1]=='\0'){
+			  year[1]='0';
+			 }
+
+	////////////// hours:minutes:seconds //////////////
+
+		  if(sTime.Seconds < 10){
+		  presence[298]=seconds[1];
+		  presence[299]=seconds[0];
+		  }
+		  else{
+			  presence[298]=seconds[0];
+			  presence[299]=seconds[1];
+		  }
+
+		  if (sTime.Minutes < 10){
+		  presence[295]=minutes[1];
+		  presence[296]=minutes[0];
+		  }
+		  else{
+			  presence[295]=minutes[0];
+			  presence[296]=minutes[1];
+		  }
+
+		  if (sTime.Hours < 10){
+		  presence[292]=hours[1];
+		  presence[293]=hours[0];
+		  }
+		  else{
+			  presence[292]=hours[0];
+			  presence[293]=hours[1];
+		  }
+
+	///////// year:month:day ////////////////////////
+
+		  if(sDate.Date < 10){
+		  presence[287]=date[1];
+		  presence[288]=date[0];
+		  }
+		  else{
+			  presence[287]=date[0];
+			  presence[288]=date[1];
+		  }
+
+		  if (sDate.Month < 10){
+		  presence[284]=month[1];
+		  presence[285]=month[0];
+		  }
+		  else{
+			  presence[284]=month[0];
+			  presence[285]=month[1];
+		  }
+
+		  if (sDate.Year < 10){
+		  presence[281]=year[1];
+		  presence[282]=year[0];
+		  }
+		  else{
+			  presence[281]=year[0];
+			  presence[282]=year[1];
+		  }
+
+	////// shift of logs //////////////////////// 311
+		  while(i>311){
+			  presence[i]=presence[i-37];
+			  i--;
+		  }
+		  strcat((char*)presence[281],(char*)("YY:MM:DD , HH:MM:SS"));
+		  presence[281]='Y';//(char)("YY:MM:DD , HH:MM:SS"); //{"YY:MM:DD , HH:MM:SS"} // (char)"Y"; //;
+
+		  second_prev = sTime.Seconds;
 
 
-	  if (seconds[1]=='\0'){
-		  seconds[1]='0';
 	  }
-
-	  if(minutes[1]=='\0'){
-		 minutes[1]='0';
-	 }
-
-	  if(sTime.Seconds < 10){
-	  presence[298]=seconds[1];
-	  presence[299]=seconds[0];
-	  }
-	  else{
-		  presence[298]=seconds[0];
-		  presence[299]=seconds[1];
-	  }
-
-	  if (sTime.Minutes < 10){
-	  presence[295]=minutes[1];
-	  presence[296]=minutes[0];
-	  }
-	  else{
-		  presence[295]=minutes[0];
-		  presence[296]=minutes[1];
-	  }
-
-
-	  while(i>311){
-		  presence[i]=presence[i-37];
-		  i--;
-	  }
-
-	 //; HAL_Delay(500);
-
-
 	  //logi[65] = sTime.Seconds;
 
 	  //strcat(presence, "<p><b>Obecnosc w pomieszczeniu:  </b> </p>\r\n");
